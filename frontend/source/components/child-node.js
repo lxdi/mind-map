@@ -8,6 +8,9 @@ export class ChildNode extends React.Component {
 		super(props);
 		this.state = { node: props.node, isLeft: props.isLeft, parentRef: props.refParent, nodeRef: React.createRef()}
 
+
+		registerReaction('child-node-ui-' + this.state.node.name, 'state', ['select', 'create-new'], ()=>this.setState({}))
+
     //registerObject('main-ui', {'three-frames':true})
 	}
 
@@ -33,15 +36,27 @@ export class ChildNode extends React.Component {
 		var parentCord = calculateSidePoint(this.state.parentRef, this.state.isLeft)
 		var nodeCord = calculateSidePoint(this.state.nodeRef, !this.state.isLeft)
 
-		var style = this.props.isLevel1? 'node-level1': this.state.isLeft? 'node-child-left': 'node-child-right'
+		var styleCls = this.props.isLevel1? 'node-level1': this.state.isLeft? 'node-child-left': 'node-child-right'
+
+		if (chkSt('state', 'selected') == this.state.node) {
+			styleCls = 'node-selected ' + styleCls 
+		}
+
+		var tableStyle = {}
+
+		if (this.state.isLeft) {
+			tableStyle = {marginLeft: 'auto'}
+		}
 
 		return (
 			<div id = {this.state.node.name} style = {getSideMargin(this.state.isLeft)}>
-                <table class='child-table'>
+                <table class='child-table' style={tableStyle}>
                     <tr>
 						<td>{getChildrenUI(this.state, this.state.isLeft)}</td>
                         <td>
-							<div ref = {this.state.nodeRef} class={'node-common ' + style}>{this.state.node.name}</div>
+							<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={()=>fireEvent('state', 'select', [this.state.node])}>
+								{this.state.node.name}
+							</div>
 						</td>
 						<td>{getChildrenUI(this.state, !this.state.isLeft)}</td>
                     </tr>
@@ -69,8 +84,6 @@ const getChildrenUI = function(state, isRender) {
 	if (!isRender || state.node.children == null) {
 		return null
 	}
-
-	console.log(state.node)
 
 	return state.node.children.map(child => <ChildNode node = {child} isLeft = {state.isLeft} refParent = {state.nodeRef}/>)
 }
@@ -104,7 +117,7 @@ const getLineUI = function(cord1, cord2) {
             width: '100%', height: '100%', pointerEvents: 'none', zIndex: -1 
           }}
         >
-          <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="yellow" strokeWidth="1" />
+          <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="greenYellow" strokeWidth="1" />
         </svg>
 }
 

@@ -13,12 +13,17 @@
   border-radius: 5px
 }
 
+.node-common:hover {
+  border: 2px solid green;
+}
+
 .node-root {
   border: 1px solid steelblue;
   min-width: 200px;
   /* height: 50px; */
   font-size: 14pt;
   padding: 10px;
+  font-weight: bold;
 }
 
 .node-level1 {
@@ -39,4 +44,8 @@
   border-bottom: 1px solid steelblue;
   min-width: 150px;
   font-size: 10pt;
+}
+
+.node-selected {
+  border: 2px solid coral;
 }
