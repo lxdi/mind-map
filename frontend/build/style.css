@@ -1,0 +1,42 @@
+
+.nodes-main-frame {
+    display: grid;
+    place-items: center; /* Centers both ways at once */
+    height: 100vh;
+}
+
+.node-common {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px
+}
+
+.node-root {
+  border: 1px solid steelblue;
+  min-width: 200px;
+  /* height: 50px; */
+  font-size: 14pt;
+  padding: 10px;
+}
+
+.node-level1 {
+  border: 1px solid steelblue;
+  min-width: 150px;
+  font-size: 12pt;
+}
+
+.node-child-right {
+  border-left: 1px solid steelblue;
+  border-bottom: 1px solid steelblue;
+  min-width: 150px;
+  font-size: 10pt;
+}
+
+.node-child-left {
+  border-right: 1px solid steelblue;
+  border-bottom: 1px solid steelblue;
+  min-width: 150px;
+  font-size: 10pt;
+}
