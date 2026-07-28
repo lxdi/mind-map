@@ -23,6 +23,7 @@ registerEvent('state', 'create-new', (stateSetter) => {
         newNode = createChildForRoot()
     }
 
+    indexContent(newNode, parentNode)
     stateSetter('selected', newNode)
 })
 
@@ -34,6 +35,8 @@ const createChildNode = function(parentNode) {
     } else {
         parentNode.children = [newNode]
     }
+
+    return newNode
 }
 
 const createChildForRoot = function() {
@@ -49,6 +52,25 @@ const createChildForRoot = function() {
 
     children.push(newNode)
     return newNode
+}
+
+const indexContent = function(curNode, parentNode) {
+
+    if (parentNode != null) {
+        curNode['_parent'] = parentNode
+    }
+
+    if (curNode.left != null) {
+        curNode.left.forEach(child => indexContent(child, curNode));
+    }
+
+    if (curNode.right != null) {
+        curNode.right.forEach(child => indexContent(child, curNode));
+    }
+
+    if (curNode.children != null) {
+        curNode.children.forEach(child => indexContent(child, curNode));
+    }
 }
 
 

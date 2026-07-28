@@ -10,6 +10,7 @@ export class ChildNode extends React.Component {
 
 
 		registerReaction('child-node-ui-' + this.state.node.name, 'state', ['select', 'create-new'], ()=>this.setState({}))
+		registerReaction('child-node-ui-' + this.state.node.name, 'dragndrop', ['on-over', 'on-drop'], ()=>this.setState({}))
 
     //registerObject('main-ui', {'three-frames':true})
 	}
@@ -48,14 +49,22 @@ export class ChildNode extends React.Component {
 			tableStyle = {marginLeft: 'auto'}
 		}
 
+		if (this.state.node.isPhantom) {
+			return getPhantomUI(this.state.nodeRef, getLineUI(nodeCord, parentCord), getSideMargin(this.state.isLeft))
+		}
+
 		return (
-			<div id = {this.state.node.name} style = {getSideMargin(this.state.isLeft)}>
+			<div style = {getSideMargin(this.state.isLeft)}>
                 <table class='child-table' style={tableStyle}>
                     <tr>
 						<td>{getChildrenUI(this.state, this.state.isLeft)}</td>
                         <td>
-							<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={()=>fireEvent('state', 'select', [this.state.node])}>
-								<a href="#" style={{textDecoration:'none'}} onClick={()=>fireEvent('node-modal', 'open', [this.state.node])}>
+							<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={()=>fireEvent('state', 'select', [this.state.node])}
+								onDragStart={(e)=>{fireEvent('dragndrop', 'on-start', [this.state.node])}}
+                    			onDragOver={(e)=>{fireEvent('dragndrop', 'on-over', [this.state.node])}}
+								onDragEnd={(e)=>{e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
+
+								<a href="#" style={{textDecoration:'none'}} onClick={()=> modalOpenHandler(this.state.node)}>
 									{this.state.node.name}
 								</a>
 							</div>
@@ -67,6 +76,15 @@ export class ChildNode extends React.Component {
 			</div>
 		)
 	}
+}
+
+const modalOpenHandler = function(node) {
+
+	if (chkSt('state', 'selected') != node) {
+		return
+	}
+
+	fireEvent('node-modal', 'open', [node])
 }
 
 const getSideMargin = function(isLeft) {
@@ -87,7 +105,7 @@ const getChildrenUI = function(state, isRender) {
 		return null
 	}
 
-	return state.node.children.map(child => <ChildNode node = {child} isLeft = {state.isLeft} refParent = {state.nodeRef}/>)
+	return state.node.children.map(child => <div key = {child.name}><ChildNode node = {child} isLeft = {state.isLeft} refParent = {state.nodeRef}/></div>)
 }
 
 const calculateSidePoint = function(ref, isLeft) {
@@ -113,7 +131,7 @@ const getLineUI = function(cord1, cord2) {
 	const x1 = cord1.x; const y1 = cord1.y; const x2 = cord2.x; const y2 = cord2.y;
 
 
-	return <svg 
+	return <svg key = {x1 + y1 + x2 + y2}
           style={{ 
             position: 'absolute', top: 0, left: 0, 
             width: '100%', height: '100%', pointerEvents: 'none', zIndex: -1 
@@ -121,6 +139,12 @@ const getLineUI = function(cord1, cord2) {
         >
           <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="greenYellow" strokeWidth="1" />
         </svg>
+}
+
+const getPhantomUI = function(ref, linesUI, style) {
+	return 	<div style = {style} ref = {ref} class={'node-common node-phantom'}>
+		{linesUI}
+	</div>
 }
 
 // calculateLine() {

@@ -55,3 +55,9 @@
   max-width: 100%;
   width:50%;
 }
+
+.node-phantom {
+  border: 1px solid grey;
+  width: 100px;
+  height: 30px;
+}

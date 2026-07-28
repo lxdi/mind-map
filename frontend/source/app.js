@@ -6,6 +6,7 @@ import {NodeModal} from './components/node-modal'
 import {registerEvent, registerObject, fireEvent, chkSt} from 'absevents'
 import './service/onkeypress-handler'
 import './service/state'
+import './service/dragndrop'
 
 
 ReactDOM.render(<div id="app" />, document.body);

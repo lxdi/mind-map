@@ -12,6 +12,7 @@ export class NodeModal extends React.Component{
     //registerObject('node-modal', {isOpen: false})
     registerEvent('node-modal', 'open', (stSetter, node) => this.setState({isOpen: true, node: node}))
     registerEvent('node-modal', 'close', (stSetter)=>this.setState({isOpen:false, node: null}))
+    
   }
 
   render(){

@@ -12,6 +12,7 @@ export class NodeTree extends React.Component {
 
 		registerReaction('root-node-ui', 'state', ['select', 'create-new'], ()=>this.setState({}))
 		registerReaction('root-node-ui', 'node-modal', ['close'], ()=>this.setState({}))
+		registerReaction('root-node-ui', 'dragndrop', ['on-over', 'on-drop'], ()=>this.setState({}))
 
     //registerObject('main-ui', {'three-frames':true})
 	}
@@ -40,7 +41,7 @@ export class NodeTree extends React.Component {
                 <table class='main-table'>
                     <tr>
 						<td>
-							{leftNodes.map(node => <ChildNode node = {node} isLeft = {true} refParent = {this.nodeRef} isLevel1 = {true} />)}
+							{leftNodes.map(node => <div key = {node.name}><ChildNode node = {node} isLeft = {true} refParent = {this.nodeRef} isLevel1 = {true} /> </div>)}
 						</td>
                         <td>
 							<div ref = {this.nodeRef} class={style} onClick={()=>fireEvent('state', 'select', [this.state.root])}>
@@ -51,7 +52,7 @@ export class NodeTree extends React.Component {
 							</div>
 						</td>
 						<td>
-							{rightNodes.map(node => <ChildNode node = {node} refParent = {this.nodeRef} isLevel1 = {true} />)}
+							{rightNodes.map(node => <div key = {node.name}><ChildNode id = {node.name} node = {node} refParent = {this.nodeRef} isLevel1 = {true} /> </div>)}
 						</td>
                     </tr>
                 </table>
