@@ -11,6 +11,7 @@ export class NodeTree extends React.Component {
 		this.nodeRef = React.createRef();
 
 		registerReaction('root-node-ui', 'state', ['select', 'create-new'], ()=>this.setState({}))
+		registerReaction('root-node-ui', 'node-modal', ['close'], ()=>this.setState({}))
 
     //registerObject('main-ui', {'three-frames':true})
 	}
@@ -43,7 +44,10 @@ export class NodeTree extends React.Component {
 						</td>
                         <td>
 							<div ref = {this.nodeRef} class={style} onClick={()=>fireEvent('state', 'select', [this.state.root])}>
-								{this.state.root.name}
+								<a href="#" style={{textDecoration:'none'}}  onClick={()=>fireEvent('node-modal', 'open', [this.state.root])}>
+									{this.state.root.name}
+								</a>
+								
 							</div>
 						</td>
 						<td>

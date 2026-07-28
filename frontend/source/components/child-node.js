@@ -55,7 +55,9 @@ export class ChildNode extends React.Component {
 						<td>{getChildrenUI(this.state, this.state.isLeft)}</td>
                         <td>
 							<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={()=>fireEvent('state', 'select', [this.state.node])}>
-								{this.state.node.name}
+								<a href="#" style={{textDecoration:'none'}} onClick={()=>fireEvent('node-modal', 'open', [this.state.node])}>
+									{this.state.node.name}
+								</a>
 							</div>
 						</td>
 						<td>{getChildrenUI(this.state, !this.state.isLeft)}</td>

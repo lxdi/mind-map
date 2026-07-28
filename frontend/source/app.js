@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {NodeTree} from './components/node-tree'
+import {NodeModal} from './components/node-modal'
 
 import {registerEvent, registerObject, fireEvent, chkSt} from 'absevents'
 import './service/onkeypress-handler'
@@ -15,6 +16,7 @@ function rerender(){
 	ReactDOM.render(
 		<div class="nodes-main-frame">
 			<NodeTree content={chkSt('state', 'content')} />
+			<NodeModal/>
 		</div>, app);
 }
 
