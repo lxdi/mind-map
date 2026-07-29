@@ -10,6 +10,7 @@ var content = {
 
 registerObject('state', {'content': content})
 registerEvent('state', 'select', (stateSetter, node) => stateSetter('selected', node))
+registerEvent('state', 'unselect', (stateSetter) => stateSetter('selected', null))
 
 registerEvent('state', 'create-new', (stateSetter) => {
 

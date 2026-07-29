@@ -34,8 +34,9 @@ export class ChildNode extends React.Component {
 
 	render() {
 
-		var parentCord = calculateSidePoint(this.state.parentRef, this.state.isLeft)
-		var nodeCord = calculateSidePoint(this.state.nodeRef, !this.state.isLeft)
+		var position = this.props.isLevel1? 'center': this.state.isLeft? 'left': 'right'
+		var parentCord = calculateSidePoint(this.state.parentRef, position)
+		var nodeCord = calculateSidePoint(this.state.nodeRef, !this.state.isLeft? 'left': 'right')
 
 		var styleCls = this.props.isLevel1? 'node-level1': this.state.isLeft? 'node-child-left': 'node-child-right'
 
@@ -53,18 +54,20 @@ export class ChildNode extends React.Component {
 			return getPhantomUI(this.state.nodeRef, getLineUI(nodeCord, parentCord), getSideMargin(this.state.isLeft))
 		}
 
+		var nodeSetCls = this.props.isLevel1? 'node-set-level1': 'node-set'
+
 		return (
-			<div style = {getSideMargin(this.state.isLeft)}>
+			<div class = {nodeSetCls} style = {getSideMargin(this.state.isLeft)}>
                 <table class='child-table' style={tableStyle}>
                     <tr>
 						<td>{getChildrenUI(this.state, this.state.isLeft)}</td>
                         <td>
-							<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={()=>fireEvent('state', 'select', [this.state.node])}
+							<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={(e)=>{e.stopPropagation(); fireEvent('state', 'select', [this.state.node])}}
 								onDragStart={(e)=>{fireEvent('dragndrop', 'on-start', [this.state.node])}}
                     			onDragOver={(e)=>{fireEvent('dragndrop', 'on-over', [this.state.node])}}
 								onDragEnd={(e)=>{e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
 
-								<a href="#" style={{textDecoration:'none'}} onClick={()=> modalOpenHandler(this.state.node)}>
+								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); modalOpenHandler(this.state.node)}}>
 									{this.state.node.name}
 								</a>
 							</div>
@@ -81,6 +84,7 @@ export class ChildNode extends React.Component {
 const modalOpenHandler = function(node) {
 
 	if (chkSt('state', 'selected') != node) {
+		fireEvent('state', 'select', [node])
 		return
 	}
 
@@ -108,17 +112,23 @@ const getChildrenUI = function(state, isRender) {
 	return state.node.children.map(child => <div key = {child.name}><ChildNode node = {child} isLeft = {state.isLeft} refParent = {state.nodeRef}/></div>)
 }
 
-const calculateSidePoint = function(ref, isLeft) {
+const calculateSidePoint = function(ref, position) {
 	var node = ref.current
 
 	if (!node) return null
 
 	const rect = node.getBoundingClientRect();
 
-	if (isLeft) {
+	if (position == 'left') {
 		return { x: rect.left + window.scrollX, y: rect.top + rect.height / 2 + window.scrollY }
-	} else {
+	}
+
+	if (position == 'right') {
 		return { x: rect.right + window.scrollX, y: rect.top + rect.height / 2 + window.scrollY }
+	}
+
+	if (position == 'center') {
+		return { x: rect.left + rect.width / 2 + window.scrollX, y: rect.top + rect.height / 2 + window.scrollY }
 	}
 }
 
@@ -130,6 +140,11 @@ const getLineUI = function(cord1, cord2) {
 
 	const x1 = cord1.x; const y1 = cord1.y; const x2 = cord2.x; const y2 = cord2.y;
 
+	const pointX = x1 - (x1-x2)*0.8
+	const pointY = y1
+
+	const coords = "M "+ x1 + "," + y1 + " Q " + pointX + "," + pointY + " " + x2 + "," + y2
+
 
 	return <svg key = {x1 + y1 + x2 + y2}
           style={{ 
@@ -137,7 +152,9 @@ const getLineUI = function(cord1, cord2) {
             width: '100%', height: '100%', pointerEvents: 'none', zIndex: -1 
           }}
         >
-          <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="greenYellow" strokeWidth="1" />
+
+		    
+  			<path d={coords} fill="none" stroke="dimgrey" stroke-width="1" />	
         </svg>
 }
 
@@ -146,6 +163,11 @@ const getPhantomUI = function(ref, linesUI, style) {
 		{linesUI}
 	</div>
 }
+
+//<!-- M = Start (20,100) | Q = Control (100,20), End (180,100) -->
+//<path d="M 20,100 Q 100,20 180,100" fill="none" stroke="dimgrey" stroke-width="1" />
+
+//        	<line x1={x1} y1={y1} x2={x2} y2={y2} stroke="dimgrey" strokeWidth="1" />
 
 // calculateLine() {
 //     // Access DOM nodes via .current

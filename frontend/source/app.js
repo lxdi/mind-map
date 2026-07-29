@@ -15,7 +15,7 @@ document.addEventListener("keydown", (event)=>fireEvent('key-press-handler', 'pr
 
 function rerender(){
 	ReactDOM.render(
-		<div class="nodes-main-frame">
+		<div class="nodes-main-frame" onClick={(e)=> {e.preventDefault(); fireEvent('state', 'unselect')}}>
 			<NodeTree content={chkSt('state', 'content')} />
 			<NodeModal/>
 		</div>, app);
