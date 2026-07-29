@@ -66,7 +66,7 @@ export class ChildNode extends React.Component {
 								draggable = {true}
 								onDragStart={(e)=>{fireEvent('dragndrop', 'on-start', [this.state.node])}}
                     			onDragOver={(e)=>{fireEvent('dragndrop', 'on-over', [this.state.node])}}
-								onDragEnd={(e)=>{console.log('drop'); e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
+								onDragEnd={(e)=>{e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
 
 								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); modalOpenHandler(this.state.node)}}>
 									{this.state.node.name}

@@ -14,6 +14,7 @@ var content = {
 registerObject('state', {'content': content})
 registerEvent('state', 'select', (stateSetter, node) => stateSetter('selected', node))
 registerEvent('state', 'unselect', (stateSetter) => stateSetter('selected', null))
+registerEvent('state', 'safe-point', (stateSetter) => doSafePoint())
 
 registerEvent('state', 'create-new', (stateSetter) => {
 
@@ -33,13 +34,16 @@ registerEvent('state', 'create-new', (stateSetter) => {
     stateSetter('selected', newNode)
 })
 
+registerEvent('state', 'delete', (stateSetter) => {
 
-registerEvent('state', 'safe-point', (stateSetter) => {
-    const content = chkSt('state', 'content')
-    removeSystemProps(content)
-    const clone = JSON.parse(JSON.stringify(content)) // structuredClone(chkSt('state', 'content'))
-    history.push(clone)
-    indexContent(content, null, false)
+    const node = chkSt('state', 'selected')
+
+    if (chkSt('state', 'content') == node) {
+        return
+    }
+
+    doSafePoint()
+    removeByValue(getChildren(node['_parent'], node), node)
 })
 
 registerEvent('state', 'restore', (stateSetter) => {
@@ -54,6 +58,14 @@ registerEvent('state', 'restore', (stateSetter) => {
     stateSetter('content', restored)
     fireEvent('dragndrop', 'clear')
 })
+
+const doSafePoint = function() {
+    const content = chkSt('state', 'content')
+    removeSystemProps(content)
+    const clone = JSON.parse(JSON.stringify(content)) // structuredClone(chkSt('state', 'content'))
+    history.push(clone)
+    indexContent(content, null, false)
+}
 
 const createChildNode = function(parentNode) {
     const newNode = { name: "Untitled" + counter++ }
@@ -125,6 +137,31 @@ const removeSystemProps = function(curNode) {
 
     if (curNode.children != null) {
         curNode.children.forEach(child => removeSystemProps(child));
+    }
+}
+
+// -----TODO: copypaste ----
+
+const removeByValue = function(arr, value) {
+    const index = arr.indexOf(value);
+
+    if (index > -1) {
+        arr.splice(index, 1);
+    }
+}
+
+const getChildren = function(parent, child) {
+
+    if (parent.children != null && parent.children.includes(child)) {
+        return parent.children
+    }
+
+    if (parent.left != null && parent.left.includes(child)) {
+        return parent.left
+    }
+
+    if (parent.right != null && parent.right.includes(child)) {
+        return parent.right
     }
 }
 
