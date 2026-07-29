@@ -1,12 +1,15 @@
 import {registerObject, registerEvent, chkSt, fireEvent, registerReaction} from 'absevents'
 
 var counter = 1
+var history = []
 
 var content = {
 	name: "Root",
 	left: [],
 	right: []
 }
+
+
 
 registerObject('state', {'content': content})
 registerEvent('state', 'select', (stateSetter, node) => stateSetter('selected', node))
@@ -24,8 +27,32 @@ registerEvent('state', 'create-new', (stateSetter) => {
         newNode = createChildForRoot()
     }
 
-    indexContent(newNode, parentNode)
+    newNode.version = parentNode.version
+
+    indexContent(newNode, parentNode, false)
     stateSetter('selected', newNode)
+})
+
+
+registerEvent('state', 'safe-point', (stateSetter) => {
+    const content = chkSt('state', 'content')
+    removeSystemProps(content)
+    const clone = JSON.parse(JSON.stringify(content)) // structuredClone(chkSt('state', 'content'))
+    history.push(clone)
+    indexContent(content, null, false)
+})
+
+registerEvent('state', 'restore', (stateSetter) => {
+
+    if (history.length < 1) {
+        console.log('history is empty')
+        return
+    }
+
+    const restored = history.pop()
+    indexContent(restored, null, true)
+    stateSetter('content', restored)
+    fireEvent('dragndrop', 'clear')
 })
 
 const createChildNode = function(parentNode) {
@@ -55,22 +82,49 @@ const createChildForRoot = function() {
     return newNode
 }
 
-const indexContent = function(curNode, parentNode) {
+const indexContent = function(curNode, parentNode, isNewVersion) {
+
+    if (isNewVersion) {
+        if (curNode.version == null ) {
+            curNode.version = 1
+        } else {
+            curNode.version = curNode.version + 1
+        }
+    }
 
     if (parentNode != null) {
         curNode['_parent'] = parentNode
     }
 
     if (curNode.left != null) {
-        curNode.left.forEach(child => indexContent(child, curNode));
+        curNode.left.forEach(child => indexContent(child, curNode, isNewVersion));
     }
 
     if (curNode.right != null) {
-        curNode.right.forEach(child => indexContent(child, curNode));
+        curNode.right.forEach(child => indexContent(child, curNode, isNewVersion));
     }
 
     if (curNode.children != null) {
-        curNode.children.forEach(child => indexContent(child, curNode));
+        curNode.children.forEach(child => indexContent(child, curNode, isNewVersion));
+    }
+}
+
+const removeSystemProps = function(curNode) {
+
+    if (curNode['_parent'] != null) {
+        delete curNode['_parent']
+    }
+
+    if (curNode.left != null) {
+        curNode.left.forEach(child => removeSystemProps(child));
+    }
+
+    if (curNode.right != null) {
+        curNode.right.forEach(child => removeSystemProps(child));
+    }
+
+    if (curNode.children != null) {
+        curNode.children.forEach(child => removeSystemProps(child));
     }
 }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Modal, Button, Form} from 'react-bootstrap'
 import {NodeTree} from './components/node-tree'
 import {NodeModal} from './components/node-modal'
 
@@ -15,9 +16,14 @@ document.addEventListener("keydown", (event)=>fireEvent('key-press-handler', 'pr
 
 function rerender(){
 	ReactDOM.render(
-		<div class="nodes-main-frame" onClick={(e)=> {e.preventDefault(); fireEvent('state', 'unselect')}}>
-			<NodeTree content={chkSt('state', 'content')} />
-			<NodeModal/>
+		<div>
+			<div>
+				<Button id='close' onClick={()=>fireEvent('state', 'restore')} variant="primary">Undo</Button>
+			</div>
+			<div class="nodes-main-frame" onClick={(e)=> {e.preventDefault(); fireEvent('state', 'unselect')}}>
+				<NodeTree />
+				<NodeModal/>
+			</div>
 		</div>, app);
 }
 

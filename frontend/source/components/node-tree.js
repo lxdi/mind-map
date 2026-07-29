@@ -7,12 +7,12 @@ import {ChildNode} from './child-node'
 export class NodeTree extends React.Component {
 	constructor(props){
 		super(props);
-		this.state = { root: props.content }
+		this.state = { root: chkSt('state', 'content') }
 		this.nodeRef = React.createRef();
 
-		registerReaction('root-node-ui', 'state', ['select', 'create-new', 'unselect'], ()=>this.setState({}))
+		registerReaction('root-node-ui', 'state', ['select', 'create-new', 'unselect', 'restore'], ()=>this.setState({root: chkSt('state', 'content')}))
 		registerReaction('root-node-ui', 'node-modal', ['close'], ()=>this.setState({}))
-		registerReaction('root-node-ui', 'dragndrop', ['on-over', 'on-drop'], ()=>this.setState({}))
+		registerReaction('root-node-ui', 'dragndrop', ['on-over', 'on-drop'], ()=>this.setState({root: chkSt('state', 'content')}))
 
     //registerObject('main-ui', {'three-frames':true})
 	}
@@ -22,12 +22,12 @@ export class NodeTree extends React.Component {
 		var leftNodes = []
 		var rightNodes = []
 
-		if (this.props.content.left != null) {
-			leftNodes = this.props.content.left
+		if (this.state.root.left != null) {
+			leftNodes = this.state.root.left
 		}
 
-		if (this.props.content.right != null) {
-			rightNodes = this.props.content.right
+		if (this.state.root.right != null) {
+			rightNodes = this.state.root.right
 		}
 
 		var style = 'node-root node-common' 
@@ -41,7 +41,7 @@ export class NodeTree extends React.Component {
                 <table class='main-table'>
                     <tr>
 						<td>
-							{leftNodes.map(node => <div key = {node.name}><ChildNode node = {node} isLeft = {true} refParent = {this.nodeRef} isLevel1 = {true} /> </div>)}
+							{leftNodes.map(node => <div key = {node.name + '-' + node.version}><ChildNode node = {node} isLeft = {true} refParent = {this.nodeRef} isLevel1 = {true} /> </div>)}
 						</td>
                         <td>
 							<div ref = {this.nodeRef} class={style} onClick={(e)=>{e.stopPropagation(); fireEvent('state', 'select', [this.state.root])}}>
@@ -52,7 +52,7 @@ export class NodeTree extends React.Component {
 							</div>
 						</td>
 						<td>
-							{rightNodes.map(node => <div key = {node.name}><ChildNode id = {node.name} node = {node} refParent = {this.nodeRef} isLevel1 = {true} /> </div>)}
+							{rightNodes.map(node => <div key = {node.name  + '-' + node.version}><ChildNode id = {node.name} node = {node} refParent = {this.nodeRef} isLevel1 = {true} /> </div>)}
 						</td>
                     </tr>
                 </table>

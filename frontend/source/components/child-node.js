@@ -63,9 +63,10 @@ export class ChildNode extends React.Component {
 						<td>{getChildrenUI(this.state, this.state.isLeft)}</td>
                         <td>
 							<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={(e)=>{e.stopPropagation(); fireEvent('state', 'select', [this.state.node])}}
+								draggable = {true}
 								onDragStart={(e)=>{fireEvent('dragndrop', 'on-start', [this.state.node])}}
                     			onDragOver={(e)=>{fireEvent('dragndrop', 'on-over', [this.state.node])}}
-								onDragEnd={(e)=>{e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
+								onDragEnd={(e)=>{console.log('drop'); e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
 
 								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); modalOpenHandler(this.state.node)}}>
 									{this.state.node.name}
@@ -109,7 +110,7 @@ const getChildrenUI = function(state, isRender) {
 		return null
 	}
 
-	return state.node.children.map(child => <div key = {child.name}><ChildNode node = {child} isLeft = {state.isLeft} refParent = {state.nodeRef}/></div>)
+	return state.node.children.map(child => <div key = {child.name + '-' + child.version}><ChildNode node = {child} isLeft = {state.isLeft} refParent = {state.nodeRef}/></div>)
 }
 
 const calculateSidePoint = function(ref, position) {

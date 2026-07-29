@@ -1,18 +1,19 @@
 import {registerObject, registerEvent, chkSt, fireEvent, registerReaction} from 'absevents'
 
-registerEvent('dragndrop', 'on-start', (stSetter, node) => {stSetter('node', node)})
+registerEvent('dragndrop', 'on-start', (stSetter, node) => {fireEvent('state', 'safe-point'); stSetter('node', node)})
 
-registerEvent('dragndrop', 'on-over', (stSetter, node) => {onOverHandler(stSetter, chkSt('dragndrop', 'node'), node)})
+registerEvent('dragndrop', 'on-over', (stSetter, node) => {safeBlock(() => onOverHandler(stSetter, chkSt('dragndrop', 'node'), node))})
 
-registerEvent('dragndrop', 'on-drop', (stSetter, node) => {onDropHandler(stSetter, chkSt('dragndrop', 'node'), node)})
+registerEvent('dragndrop', 'on-drop', (stSetter, node) => {safeBlock(() => onDropHandler(stSetter, chkSt('dragndrop', 'node'), node))})
+
+registerEvent('dragndrop', 'clear', (stSetter) => {stSetter('phantomHome', null); stSetter('phantomNode', null)})
 
 //registerEvent('dragndrop', 'on-leave', (stSetter, node) => {onLeaveHandler(stSetter, chkSt('dragndrop', 'node'), node)})
 
 const onOverHandler = function(stSetter, node, targetNode) {
 
-
     if (node == targetNode) {
-        onLeaveHandler(stSetter, node, targetNode)
+        //onLeaveHandler(stSetter, node, targetNode)
         return
     }
 
@@ -46,6 +47,7 @@ const onOverHandler = function(stSetter, node, targetNode) {
 const onDropHandler = function(stSetter, node, targetNode) {
 
     if (chkSt('dragndrop', 'phantomHome') == null) {
+        console.log('phantomHome is null')
         return
     }
 
@@ -68,6 +70,15 @@ const removeByValue = function(arr, value) {
 
     if (index > -1) {
         arr.splice(index, 1);
+    }
+}
+
+const safeBlock = function(block) {
+    try {
+        return block()
+    } catch (err) {
+        console.log('Error: ', err)
+        fireEvent('state', 'restore')
     }
 }
 
