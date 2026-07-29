@@ -89,3 +89,8 @@ a:focus {
   width: 100px;
   height: 30px;
 }
+
+.node-link {
+  height: 5px;
+  width: 5px;
+}

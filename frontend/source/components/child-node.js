@@ -71,6 +71,11 @@ export class ChildNode extends React.Component {
 								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); modalOpenHandler(this.state.node)}}>
 									{this.state.node.name}
 								</a>
+
+								{this.state.node.link != null? 
+								<a href="#" onClick={(e) => {e.stopPropagation(); fireEvent('link-opener', 'open', [this.state.node.link])}}>
+									<img src="img/google-link.svg" alt="Link"></img>
+								</a>: null }
 							</div>
 						</td>
 						<td>{getChildrenUI(this.state, !this.state.isLeft)}</td>

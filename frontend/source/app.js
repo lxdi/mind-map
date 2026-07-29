@@ -9,6 +9,7 @@ import {registerEvent, registerObject, fireEvent, chkSt} from 'absevents'
 import './service/onkeypress-handler'
 import './service/state'
 import './service/dragndrop'
+import './service/link-opener'
 
 
 ReactDOM.render(<div id="app" />, document.body);
