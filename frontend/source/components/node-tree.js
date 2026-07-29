@@ -10,7 +10,7 @@ export class NodeTree extends React.Component {
 		this.state = { root: chkSt('state', 'content') }
 		this.nodeRef = React.createRef();
 
-		registerReaction('root-node-ui', 'state', ['select', 'create-new', 'unselect', 'restore', 'delete'], ()=>this.setState({root: chkSt('state', 'content')}))
+		registerReaction('root-node-ui', 'state', ['select', 'create-new', 'unselect', 'restore', 'delete', 'got'], ()=>this.setState({root: chkSt('state', 'content')}))
 		registerReaction('root-node-ui', 'node-modal', ['close'], ()=>this.setState({}))
 		registerReaction('root-node-ui', 'dragndrop', ['on-over', 'on-drop'], ()=>this.setState({root: chkSt('state', 'content')}))
 
@@ -18,6 +18,11 @@ export class NodeTree extends React.Component {
 	}
 
 	render() {
+
+		if (this.state.root == null) {
+			fireEvent('state', 'get')
+			return 'Loading...'
+		}
 
 		var leftNodes = []
 		var rightNodes = []

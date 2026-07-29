@@ -19,6 +19,7 @@ function rerender(){
 		<div>
 			<div>
 				<Button id='close' onClick={()=>fireEvent('state', 'restore')} variant="primary">Undo</Button>
+				<Button id='close' onClick={()=>fireEvent('state', 'save')} variant="primary">Save</Button>
 			</div>
 			<div class="nodes-main-frame" onClick={(e)=> {e.preventDefault(); fireEvent('state', 'unselect')}}>
 				<NodeTree />

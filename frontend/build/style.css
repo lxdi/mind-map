@@ -85,6 +85,7 @@ a:focus {
 
 .node-phantom {
   border: 1px solid grey;
+  border-radius: 5px;
   width: 100px;
   height: 30px;
 }
