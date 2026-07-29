@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {Modal, Button, Form} from 'react-bootstrap'
 import {NodeTree} from './components/node-tree'
 import {NodeModal} from './components/node-modal'
+import {ButtonsBlock} from './components/buttons-block'
 
 import {registerEvent, registerObject, fireEvent, chkSt} from 'absevents'
 import './service/onkeypress-handler'
@@ -17,10 +18,7 @@ document.addEventListener("keydown", (event)=>fireEvent('key-press-handler', 'pr
 function rerender(){
 	ReactDOM.render(
 		<div>
-			<div>
-				<Button id='close' onClick={()=>fireEvent('state', 'restore')} variant="primary">Undo</Button>
-				<Button id='close' onClick={()=>fireEvent('state', 'save')} variant="primary">Save</Button>
-			</div>
+			<ButtonsBlock/>
 			<div class="nodes-main-frame" onClick={(e)=> {e.preventDefault(); fireEvent('state', 'unselect')}}>
 				<NodeTree />
 				<NodeModal/>

@@ -17,16 +17,19 @@ registerEvent('state', 'get', (stSetter)=>{
 })
 
 registerEvent('state', 'got', (stSetter, content)=>stSetter('content', content))
+registerEvent('state', 'change', (stSetter)=>stSetter('changed', true))
 
 registerEvent('state', 'save', (stSetter)=> {
 
     if (window.location.search.includes("path=")){
-        sendPost('/content' + window.location.search, preparedForSave(), ()=>{})
+        sendPost('/content' + window.location.search, preparedForSave(), ()=>{stSetter('changed', false)})
+        stSetter('changed', false)
         return
     }
 
     const prepared = preparedForSave()
     downloadObjectAsJson(prepared, prepared.name + '.mm')
+    stSetter('changed', false)
 
 })
 
@@ -51,6 +54,7 @@ registerEvent('state', 'create-new', (stateSetter) => {
 
     indexContent(newNode, parentNode, false)
     stateSetter('selected', newNode)
+    stateSetter('changed', true)
 })
 
 registerEvent('state', 'delete', (stateSetter) => {
@@ -63,6 +67,7 @@ registerEvent('state', 'delete', (stateSetter) => {
 
     doSafePoint()
     removeByValue(getChildren(node['_parent'], node), node)
+    stateSetter('changed', true)
 })
 
 registerEvent('state', 'restore', (stateSetter) => {
@@ -76,6 +81,7 @@ registerEvent('state', 'restore', (stateSetter) => {
     indexContent(restored, null, true)
     stateSetter('content', restored)
     fireEvent('dragndrop', 'clear')
+    stateSetter('changed', true)
 })
 
 const doSafePoint = function() {

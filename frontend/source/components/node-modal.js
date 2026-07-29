@@ -49,6 +49,7 @@ const getModalBody = function(comp) {
 const changeNameHandler = function(comp, e){
   comp.state.node.name = e.target.value
   comp.setState({})
+  fireEvent('state', 'change')
 }
 
 const getFooterButtonsUI = function() {
