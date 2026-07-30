@@ -14,6 +14,9 @@ var history = []
 
 registerEvent('state', 'get', (stSetter)=>{
   sendGet('/content' + window.location.search, (content)=>{
+    if(content.name != null) {
+        document.title = content.name
+    }
     fireEvent('state', 'got', [content])
   })
 })
