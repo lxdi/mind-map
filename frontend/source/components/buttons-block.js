@@ -14,10 +14,13 @@ export class ButtonsBlock extends React.Component{
 
   render(){
     return (
-                  <div>
-                    <Button id='close' onClick={()=>fireEvent('state', 'restore')} variant="primary" >Undo</Button>
-                    { showSave()? <Button id='close' onClick={()=>fireEvent('state', 'save')} variant="primary">Save</Button>: null}
-                </div>
+        <table>
+                <tr>
+                    <td><Button id='close' onClick={()=>fireEvent('state', 'restore')} variant="primary" >Undo</Button> </td>
+                    <td><Button id='close' onClick={()=>window.open(window.location.origin, '_blank')} variant="primary" >Create new</Button></td>
+                    <td>{ showSave()? <Button id='close' onClick={()=>fireEvent('state', 'save')} variant="primary">Save</Button>: null}</td>
+                </tr>
+        </table>
     )
   }
 }

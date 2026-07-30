@@ -38,15 +38,10 @@ public class ContentService {
             return FileUtils.readFileToString(contentFile, StandardCharsets.UTF_8);
         }
 
-        log.warn(String.format("Didn't find a file in %s; creating new from default", contentFile));
+        //log.warn(String.format("Didn't find a file in %s; creating new from default", contentFile));
+        log.warn(String.format("File not found in %s", contentFile));
 
-        try (InputStream is = this.getClass().getResourceAsStream(DEFAULT_INIT_PATH)) {
-            FileUtils.copyInputStreamToFile(is, contentFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return FileUtils.readFileToString(contentFile, StandardCharsets.UTF_8);
+        throw new RuntimeException("File not found");
     }
 
     public void updateContent(String path, String content) throws IOException {
