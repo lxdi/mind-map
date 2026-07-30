@@ -1,16 +1,11 @@
 package com.sogoodlab.xyzfiles.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sogoodlab.xyzfiles.dto.state.PanelDto;
-import com.sogoodlab.xyzfiles.service.CommandsService;
 import com.sogoodlab.xyzfiles.service.ContentService;
-import com.sogoodlab.xyzfiles.service.StateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
 
 @RestController

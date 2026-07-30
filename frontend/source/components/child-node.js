@@ -76,7 +76,7 @@ export class ChildNode extends React.Component {
 
 								{this.state.node.link != null? 
 								<a href="#" onClick={(e) => {e.stopPropagation(); fireEvent('link-opener', 'open', [this.state.node.link])}}>
-									<img src="img/google-link.svg" alt="Link"></img>
+									<img src={getImgByPath(this.state.node.link)} alt="Link"></img>
 								</a>: null }
 							</div>
 						</td>
@@ -182,6 +182,23 @@ const isEmpty = function(str) {
 	}
 
 	return false
+}
+
+const getImgByPath = function(path) {
+
+	if (path.endsWith(".pdf")) {
+		return "img/pdf.svg" 
+	}
+
+	if (path.endsWith(".mm.json")) {
+		return "img/mindmap2.svg" 
+	}
+
+	if (path.startsWith("http")) {
+		return "img/globe.svg" 
+	}
+
+	return "img/google-link.svg" 
 }
 
 //<!-- M = Start (20,100) | Q = Control (100,20), End (180,100) -->

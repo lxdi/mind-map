@@ -19,6 +19,24 @@ const openLink = function(link) {
         }
 
         window.open(window.location.origin + '?path=' + path, '_blank');
+        return
+    }
+
+    if (link.startsWith("file:")) {
+        var path = link.replace("file:", "")
+        var parentPath = getPathPreset()
+
+        if (parentPath != null) {
+            path = parentPath + '/' + path
+        }
+
+        sendPost('/file/open?path=' + path, null, () => {})
+        return
+    }
+
+    if (link.startsWith("http")) {
+        window.open(link, '_blank');
+        return
     }
 }
 
