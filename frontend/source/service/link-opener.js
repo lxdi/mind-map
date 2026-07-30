@@ -10,7 +10,24 @@ const openLink = function(link) {
 
     if (link.startsWith("file:") && link.endsWith('.mm.json')) {
         console.log('open in new tab')
-        const path = link.replace("file:", "")
+        var path = link.replace("file:", "")
+
+        var parentPath = getPathPreset()
+
+        if (parentPath != null) {
+            path = parentPath + '/' + path
+        }
+
         window.open(window.location.origin + '?path=' + path, '_blank');
     }
+}
+
+const getPathPreset = function () {
+    const pathWithFile = window.location.search.replaceAll("?path=", "")
+
+    if (!pathWithFile.includes('/')) {
+        return null
+    }
+
+    return pathWithFile.slice(0, pathWithFile.lastIndexOf('/'))
 }
