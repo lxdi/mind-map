@@ -1,4 +1,5 @@
 import {registerObject, registerEvent, chkSt, fireEvent, registerReaction} from 'absevents'
+import {getChildren, removeByValue, parentCheck} from './common.js'
 
 registerEvent('dragndrop', 'on-start', (stSetter, node) => {fireEvent('state', 'safe-point'); stSetter('node', node)})
 
@@ -65,14 +66,6 @@ const onLeaveHandler = function(stSetter, node, targetNode) {
     stSetter('phantomHome', null)
 }
 
-const removeByValue = function(arr, value) {
-    const index = arr.indexOf(value);
-
-    if (index > -1) {
-        arr.splice(index, 1);
-    }
-}
-
 const safeBlock = function(block) {
     try {
         return block()
@@ -80,33 +73,6 @@ const safeBlock = function(block) {
         console.log('Error: ', err)
         fireEvent('state', 'restore')
     }
-}
-
-
-const getChildren = function(parent, child) {
-
-    if (parent.children != null && parent.children.includes(child)) {
-        return parent.children
-    }
-
-    if (parent.left != null && parent.left.includes(child)) {
-        return parent.left
-    }
-
-    if (parent.right != null && parent.right.includes(child)) {
-        return parent.right
-    }
-}
-
-const parentCheck = function(targetNode, node) {
-    var currentNode = targetNode
-
-    while(currentNode != null && currentNode != node) {
-        currentNode = currentNode['_parent'] 
-    }
-
-    return currentNode != null
-
 }
 
 const replace = function(arr, old, newVal) {

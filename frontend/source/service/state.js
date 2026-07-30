@@ -1,6 +1,8 @@
 import {registerObject, registerEvent, chkSt, fireEvent, registerReaction} from 'absevents'
 import {sendGet, sendPost, sendPut, sendDelete} from './postoffice'
+import {getChildren, removeByValue, removeSystemProps, indexContent} from './common.js'
 
+const defaultName = 'Subtopic '
 var counter = 1
 var history = []
 
@@ -84,7 +86,7 @@ registerEvent('state', 'restore', (stateSetter) => {
     stateSetter('changed', true)
 })
 
-const doSafePoint = function() {
+export const doSafePoint = function() {
     const content = chkSt('state', 'content')
     removeSystemProps(content)
     const clone = JSON.parse(JSON.stringify(content)) // structuredClone(chkSt('state', 'content'))
@@ -93,7 +95,7 @@ const doSafePoint = function() {
 }
 
 const createChildNode = function(parentNode) {
-    const newNode = { name: "Untitled" + counter++ }
+    const newNode = { name: defaultName + counter++ }
 
     if (parentNode.children != null) {
         parentNode.children.push(newNode)
@@ -105,7 +107,7 @@ const createChildNode = function(parentNode) {
 }
 
 const createChildForRoot = function() {
-    const newNode = { name: "Untitled"  + counter++ }
+    const newNode = { name: defaultName  + counter++ }
     const root = chkSt('state', 'content')
     var children = null
 
@@ -117,52 +119,6 @@ const createChildForRoot = function() {
 
     children.push(newNode)
     return newNode
-}
-
-const indexContent = function(curNode, parentNode, isNewVersion) {
-
-    if (isNewVersion) {
-        if (curNode.version == null ) {
-            curNode.version = 1
-        } else {
-            curNode.version = curNode.version + 1
-        }
-    }
-
-    if (parentNode != null) {
-        curNode['_parent'] = parentNode
-    }
-
-    if (curNode.left != null) {
-        curNode.left.forEach(child => indexContent(child, curNode, isNewVersion));
-    }
-
-    if (curNode.right != null) {
-        curNode.right.forEach(child => indexContent(child, curNode, isNewVersion));
-    }
-
-    if (curNode.children != null) {
-        curNode.children.forEach(child => indexContent(child, curNode, isNewVersion));
-    }
-}
-
-const removeSystemProps = function(curNode) {
-
-    if (curNode['_parent'] != null) {
-        delete curNode['_parent']
-    }
-
-    if (curNode.left != null) {
-        curNode.left.forEach(child => removeSystemProps(child));
-    }
-
-    if (curNode.right != null) {
-        curNode.right.forEach(child => removeSystemProps(child));
-    }
-
-    if (curNode.children != null) {
-        curNode.children.forEach(child => removeSystemProps(child));
-    }
 }
 
 const preparedForSave = function(node) {
@@ -198,30 +154,6 @@ function downloadObjectAsJson(exportObj, exportName) {
   URL.revokeObjectURL(url);
 }
 
-// -----TODO: copypaste ----
-
-const removeByValue = function(arr, value) {
-    const index = arr.indexOf(value);
-
-    if (index > -1) {
-        arr.splice(index, 1);
-    }
-}
-
-const getChildren = function(parent, child) {
-
-    if (parent.children != null && parent.children.includes(child)) {
-        return parent.children
-    }
-
-    if (parent.left != null && parent.left.includes(child)) {
-        return parent.left
-    }
-
-    if (parent.right != null && parent.right.includes(child)) {
-        return parent.right
-    }
-}
 
 
 // var content = {

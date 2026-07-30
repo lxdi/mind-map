@@ -10,11 +10,17 @@ import './service/onkeypress-handler'
 import './service/state'
 import './service/dragndrop'
 import './service/link-opener'
+import './service/clipboard'
 
 
 ReactDOM.render(<div id="app" />, document.body);
 const app = document.getElementById("app");
-document.addEventListener("keydown", (event)=>fireEvent('key-press-handler', 'press', [event]), false);
+document.addEventListener("keydown", (event)=>fireEvent('key-press-handler', 'press', [event]), false)
+
+document.addEventListener('copy', (event) => {
+    //event.preventDefault();
+	fireEvent('clipboard', 'copy')
+})
 
 function rerender(){
 	ReactDOM.render(

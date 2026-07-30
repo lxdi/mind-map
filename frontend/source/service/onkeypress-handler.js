@@ -11,4 +11,19 @@ registerEvent('key-press-handler', 'press', (stSetter, event)=>{
     fireEvent('state', 'delete')
   }
 
+  const isModifierPressed = event.ctrlKey || event.metaKey
+
+  if (isModifierPressed && event.code === 'KeyX' && chkSt('state', 'selected') != null) {
+    fireEvent('clipboard', 'cut')
+  }
+
+  if (isModifierPressed && event.code === 'KeyV' && chkSt('state', 'selected') != null) {
+    fireEvent('clipboard', 'paste')
+  }
+
+  if (isModifierPressed && event.code === 'KeyS') {
+    event.preventDefault()
+    fireEvent('state', 'save')
+  }
+
 })
