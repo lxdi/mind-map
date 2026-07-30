@@ -40,7 +40,8 @@ const getModalBody = function(comp) {
 
     return <div>
               <div>
-                <Form.Control type="text" value={comp.state.node.name} onChange={(e)=>changeNameHandler(comp, e)}/>
+                <Form.Control type="text" value={comp.state.node.name} onChange={(e)=>changeNameHandler(comp, e)} onFocus={(e) => e.target.select()}/>
+                <Form.Control as="textarea" size='sm' rows={20} value={comp.state.node.note} onChange={(e)=>changeNoteHandler(comp, e)} />
                 <Form.Control type="text" value={comp.state.node.link} onChange={(e)=>changeLinkHandler(comp, e)}/>
               </div>
           </div>
@@ -54,6 +55,12 @@ const changeNameHandler = function(comp, e){
 
 const changeLinkHandler = function(comp, e){
   comp.state.node.link = e.target.value
+  comp.setState({})
+  fireEvent('state', 'change')
+}
+
+const changeNoteHandler = function(comp, e){
+  comp.state.node.note = e.target.value
   comp.setState({})
   fireEvent('state', 'change')
 }

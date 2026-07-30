@@ -70,6 +70,7 @@ export class ChildNode extends React.Component {
 
 								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); modalOpenHandler(this.state.node)}}>
 									{this.state.node.name}
+									{this.state.node.note != null? <img src="img/note.svg" alt="Link"></img>: null}
 								</a>
 
 								{this.state.node.link != null? 
