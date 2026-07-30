@@ -68,9 +68,10 @@ export class ChildNode extends React.Component {
                     			onDragOver={(e)=>{fireEvent('dragndrop', 'on-over', [this.state.node])}}
 								onDragEnd={(e)=>{e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
 
+								{!isEmpty(this.state.node.marker)? <img src={"img/"+this.state.node.marker + ".svg"} alt="Link"></img>: null}
 								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); modalOpenHandler(this.state.node)}}>
 									{this.state.node.name}
-									{this.state.node.note != null? <img src="img/note.svg" alt="Link"></img>: null}
+									{!isEmpty(this.state.node.note)? <img src="img/note.svg" alt="Link"></img>: null}
 								</a>
 
 								{this.state.node.link != null? 
@@ -169,6 +170,18 @@ const getPhantomUI = function(ref, linesUI, style) {
 	return 	<div style = {style} ref = {ref} class={'node-common node-phantom'}>
 		{linesUI}
 	</div>
+}
+
+const isEmpty = function(str) {
+	if (str == null) {
+		return true
+	}
+
+	if (str.trim() == '') {
+		return true
+	}
+
+	return false
 }
 
 //<!-- M = Start (20,100) | Q = Control (100,20), End (180,100) -->
