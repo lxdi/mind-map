@@ -16,9 +16,9 @@ export class ButtonsBlock extends React.Component{
     return (
         <table>
                 <tr>
-                    <td><Button id='close' onClick={()=>fireEvent('state', 'restore')} variant="primary" >Undo</Button> </td>
+                    <td>{showUndo()? <Button id='close' onClick={()=>fireEvent('state', 'restore')} variant="primary" >Undo</Button>: null} </td>
                     <td><Button id='close' onClick={()=>window.open(window.location.origin, '_blank')} variant="primary" >Create new</Button></td>
-                    <td>{ showSave()? <Button id='close' onClick={()=>fireEvent('state', 'save')} variant="primary">Save</Button>: null}</td>
+                    <td>{showSave()? <Button id='close' onClick={()=>fireEvent('state', 'save')} variant="primary">Save</Button>: null}</td>
                 </tr>
         </table>
     )
@@ -31,4 +31,8 @@ const showSave = function() {
     } else {
         return true
     }
+}
+
+const showUndo = function() {
+    return chkSt('state', 'changed')
 }

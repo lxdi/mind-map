@@ -16,17 +16,15 @@ const copy = function(e) {
 
     const selected = chkSt('state', 'selected')
 
-    if (selected == null) {
+    if (selected == null || selected.length == 0) {
         return
     }
 
-    const copy = structuredClone(selected)
+    selected.forEach((node) => {
+        buffer.push(structuredClone(node))
+    })
 
-    buffer.push(copy)
-
-    // navigator.clipboard.writeText(null)
-    //   .then(() => {})
-    //   .catch(err => console.error("Error copying text: ", err));
+    navigator.clipboard.writeText(selected.map((node) => node.name).join('\n'))
 
 }
 
@@ -38,54 +36,43 @@ const cut = function() {
 
     const selected = chkSt('state', 'selected')
 
-    if (selected == null) {
+    if (selected == null  || selected.length == 0) {
         return
     }
 
-    buffer.push(selected)
+    selected.forEach((node) => {
+        buffer.push(structuredClone(node))
+        removeByValue(getChildren(node['_parent'], node), node)
+    })
 
-    removeByValue(getChildren(selected['_parent'], selected), selected)
+    navigator.clipboard.writeText(selected.map((node) => node.name).join('\n'))
 
-    // navigator.clipboard.writeText("test")
-    //   .then(() => {})
-    //   .catch(err => console.error("Error copying text: ", err));
-
+    fireEvent('state', 'change')
 }
 
 const paste = function() {
 
     doSafePoint()
 
-    const targetNode = chkSt('state', 'selected')
+    const targetNodes = chkSt('state', 'selected')
 
-    if (targetNode == null) {
+    if (targetNodes == null || targetNodes.length == 0) {
         return
     }
 
+    targetNodes.forEach((targetNode) => doPaste(targetNode))
+
+}
+
+const doPaste = function(targetNode) {
     const targetChildren = getChildrenForNode(targetNode)
-
-    // var fromClipBoard = null
-    
-    // const getFromClipBoard = async () => {
-    //     const fromClipBoard = navigator.clipboard.readText().then((text) => console.log('from clipboard' + text))
-    //     console.log(fromClipBoard)
-    // }
-
-    // getFromClipBoard()
-
-    //navigator.clipboard.readText().then((text) => console.log('from clipboard ' + text))
-
-    // while(fromClipBoard == null) {}
 
     if (buffer.length == 0) {
         navigator.clipboard.readText().then((text) => {
-            const newNode = {name: text}
-            targetChildren.push(newNode)
-            newNode['_parent'] = targetNode
-            fireEvent('state', 'change')
+            text.split(/\r?\n/).forEach((s) => createNewFromText(s, targetChildren, targetNode))
         })
     } else {
-        
+
         buffer
                 .filter((node) => targetNode !== node)
                 .filter((node) => !parentCheck(targetNode, node))
@@ -97,6 +84,11 @@ const paste = function() {
         buffer.length = 0
         fireEvent('state', 'change')
     }
+}
 
-
+const createNewFromText = function(text, targetChildren, targetNode) {
+    const newNode = {name: text}
+    targetChildren.push(newNode)
+    newNode['_parent'] = targetNode
+    fireEvent('state', 'change')
 }

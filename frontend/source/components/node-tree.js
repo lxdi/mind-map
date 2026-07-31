@@ -38,7 +38,7 @@ export class NodeTree extends React.Component {
 
 		var style = 'node-root node-common' 
 
-		if (chkSt('state', 'selected') == this.state.root) {
+		if (chkSt('state', 'selected').includes(this.state.root)) {
 			style = style + ' node-selected'
 		}
 

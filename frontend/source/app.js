@@ -16,6 +16,7 @@ import './service/clipboard'
 ReactDOM.render(<div id="app" />, document.body);
 const app = document.getElementById("app");
 document.addEventListener("keydown", (event)=>fireEvent('key-press-handler', 'press', [event]), false)
+document.addEventListener("keyup", (event)=>fireEvent('key-press-handler', 'release', [event]), false)
 
 document.addEventListener('copy', (event) => {
     //event.preventDefault();

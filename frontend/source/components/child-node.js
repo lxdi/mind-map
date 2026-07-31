@@ -40,7 +40,7 @@ export class ChildNode extends React.Component {
 
 		var styleCls = this.props.isLevel1? 'node-level1': this.state.isLeft? 'node-child-left': 'node-child-right'
 
-		if (chkSt('state', 'selected') == this.state.node) {
+		if (chkSt('state', 'selected').includes(this.state.node)) {
 			styleCls = 'node-selected ' + styleCls 
 		}
 
@@ -69,7 +69,7 @@ export class ChildNode extends React.Component {
 								onDragEnd={(e)=>{e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
 
 								{!isEmpty(this.state.node.marker)? <img src={"img/"+this.state.node.marker + ".svg"} alt="Link"></img>: null}
-								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); modalOpenHandler(this.state.node)}}>
+								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); e.preventDefault(); modalOpenHandler(this.state.node)}}>
 									{this.state.node.name}
 									{!isEmpty(this.state.node.note)? <img src="img/note.svg" alt="Link"></img>: null}
 								</a>
@@ -91,7 +91,7 @@ export class ChildNode extends React.Component {
 
 const modalOpenHandler = function(node) {
 
-	if (chkSt('state', 'selected') != node) {
+	if (!chkSt('state', 'selected').includes(node)) {
 		fireEvent('state', 'select', [node])
 		return
 	}

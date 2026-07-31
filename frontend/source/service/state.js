@@ -12,6 +12,8 @@ var history = []
 // 	right: []
 // }
 
+registerObject('state', {'selected': []})
+
 registerEvent('state', 'get', (stSetter)=>{
   sendGet('/content' + window.location.search, (content)=>{
     if(content.name != null) {
@@ -38,14 +40,20 @@ registerEvent('state', 'save', (stSetter)=> {
 
 })
 
-//registerObject('state', {'content': content})
-registerEvent('state', 'select', (stateSetter, node) => stateSetter('selected', node))
-registerEvent('state', 'unselect', (stateSetter) => stateSetter('selected', null))
+registerEvent('state', 'select', (stateSetter, node) => selectNode(node))
+registerEvent('state', 'unselect', (stateSetter) => selectNode(null))
+registerEvent('state', 'multiple-select-on', (stateSetter) => stateSetter("multiple-select", true))
+registerEvent('state', 'multiple-select-off', (stateSetter) => stateSetter("multiple-select", false))
 registerEvent('state', 'safe-point', (stateSetter) => doSafePoint())
 
 registerEvent('state', 'create-new', (stateSetter) => {
 
-    const parentNode = chkSt('state', 'selected')
+    const parentNode = chkSt('state', 'selected').at(-1)
+
+    if (parentNode == null) {
+        console.log('need to select a node')
+        return
+    }
 
     var newNode = null
 
@@ -58,13 +66,13 @@ registerEvent('state', 'create-new', (stateSetter) => {
     newNode.version = parentNode.version
 
     indexContent(newNode, parentNode, false)
-    stateSetter('selected', newNode)
+    selectNode(stateSetter, newNode)
     stateSetter('changed', true)
 })
 
 registerEvent('state', 'delete', (stateSetter) => {
 
-    const node = chkSt('state', 'selected')
+    const node = chkSt('state', 'selected').at(-1)
 
     if (chkSt('state', 'content') == node) {
         return
@@ -95,6 +103,21 @@ export const doSafePoint = function() {
     const clone = JSON.parse(JSON.stringify(content)) // structuredClone(chkSt('state', 'content'))
     history.push(clone)
     indexContent(content, null, false)
+}
+
+const selectNode = function(node) {
+
+    var selectStorage = chkSt('state', 'selected')
+
+    if (chkSt('state', 'multiple-select') == false) {
+        selectStorage.length = 0
+    }
+
+    if (node == null) {
+        selectStorage.length = 0
+    } else {
+        selectStorage.push(node)
+    }
 }
 
 const createChildNode = function(parentNode) {
