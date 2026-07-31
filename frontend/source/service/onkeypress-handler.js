@@ -30,6 +30,11 @@ registerEvent('key-press-handler', 'press', (stSetter, event)=>{
     fireEvent('state', 'save')
   }
 
+  if (isModifierPressed && event.code === 'KeyZ') {
+    event.preventDefault()
+    fireEvent('state', 'restore')
+  }
+
 })
 
 registerEvent('key-press-handler', 'release', (stSetter, event)=>{

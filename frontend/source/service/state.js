@@ -12,7 +12,7 @@ var history = []
 // 	right: []
 // }
 
-registerObject('state', {'selected': []})
+registerObject('state', {'selected': [], 'history': history})
 
 registerEvent('state', 'get', (stSetter)=>{
   sendGet('/content' + window.location.search, (content)=>{
@@ -121,7 +121,7 @@ const selectNode = function(node) {
 }
 
 const createChildNode = function(parentNode) {
-    const newNode = { name: defaultName + counter++ }
+    const newNode = createNewNode()
 
     if (parentNode.children != null) {
         parentNode.children.push(newNode)
@@ -133,7 +133,7 @@ const createChildNode = function(parentNode) {
 }
 
 const createChildForRoot = function() {
-    const newNode = { name: defaultName  + counter++ }
+    const newNode = createNewNode()
     const root = chkSt('state', 'content')
     var children = null
 
@@ -145,6 +145,13 @@ const createChildForRoot = function() {
 
     children.push(newNode)
     return newNode
+}
+
+const createNewNode = function() {
+    return { 
+        id: crypto.randomUUID(),
+        name: defaultName  + counter++,
+     }
 }
 
 const preparedForSave = function(node) {

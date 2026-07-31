@@ -117,7 +117,7 @@ const getChildrenUI = function(state, isRender) {
 		return null
 	}
 
-	return state.node.children.map(child => <div key = {child.name + '-' + child.version}><ChildNode node = {child} isLeft = {state.isLeft} refParent = {state.nodeRef}/></div>)
+	return state.node.children.map(child => <div key = {child.id + '-' + child.name + '-' + child.version}><ChildNode node = {child} isLeft = {state.isLeft} refParent = {state.nodeRef}/></div>)
 }
 
 const calculateSidePoint = function(ref, position) {

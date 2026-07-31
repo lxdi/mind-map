@@ -62,6 +62,10 @@ export const indexContent = function(curNode, parentNode, isNewVersion) {
         }
     }
 
+    if (curNode.id == null) {
+        curNode.id = crypto.randomUUID()
+    }
+
     if (parentNode != null) {
         curNode['_parent'] = parentNode
     }

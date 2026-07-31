@@ -34,5 +34,5 @@ const showSave = function() {
 }
 
 const showUndo = function() {
-    return chkSt('state', 'changed')
+    return chkSt('state', 'history').length > 0
 }
