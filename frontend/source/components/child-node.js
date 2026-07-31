@@ -62,22 +62,29 @@ export class ChildNode extends React.Component {
                     <tr>
 						<td>{getChildrenUI(this.state, this.state.isLeft)}</td>
                         <td>
-							<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={(e)=>{e.stopPropagation(); fireEvent('state', 'select', [this.state.node])}}
-								draggable = {true}
-								onDragStart={(e)=>{fireEvent('dragndrop', 'on-start', [this.state.node])}}
-                    			onDragOver={(e)=>{fireEvent('dragndrop', 'on-over', [this.state.node])}}
-								onDragEnd={(e)=>{e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
 
-								{!isEmpty(this.state.node.marker)? <img src={"img/"+this.state.node.marker + ".svg"} alt="Link"></img>: null}
-								<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); e.preventDefault(); modalOpenHandler(this.state.node)}}>
-									{this.state.node.name}
-									{!isEmpty(this.state.node.note)? <img src="img/note.svg" alt="Link"></img>: null}
-								</a>
+							<div style={{position: 'relative'}}>
+								<div style={{position: 'absolute', width:'100%', height: '100%', zIndex: '-1'}}>
+									<div style = {{width:'100%', height: '50%'}}></div>
+									<div style = {{width:'100%', height: '50%'}}></div>
+								</div>
+								<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={(e)=>{e.stopPropagation(); fireEvent('state', 'select', [this.state.node])}}
+									draggable = {true}
+									onDragStart={(e)=>{fireEvent('dragndrop', 'on-start', [this.state.node])}}
+									onDragOver={(e)=>{fireEvent('dragndrop', 'on-over', [this.state.node])}}
+									onDragEnd={(e)=>{e.preventDefault();   fireEvent('dragndrop', 'on-drop', [this.state.node])}}>
 
-								{this.state.node.link != null? 
-								<a href="#" onClick={(e) => {e.stopPropagation(); fireEvent('link-opener', 'open', [this.state.node.link])}}>
-									<img src={getImgByPath(this.state.node.link)} alt="Link"></img>
-								</a>: null }
+									{!isEmpty(this.state.node.marker)? <img src={"img/"+this.state.node.marker + ".svg"} alt="Link"></img>: null}
+									<a href="#" style={{textDecoration:'none'}} onClick={(e)=> {e.stopPropagation(); e.preventDefault(); modalOpenHandler(this.state.node)}}>
+										{this.state.node.name}
+										{!isEmpty(this.state.node.note)? <img src="img/note.svg" alt="Link"></img>: null}
+									</a>
+
+									{this.state.node.link != null? 
+									<a href="#" onClick={(e) => {e.stopPropagation(); fireEvent('link-opener', 'open', [this.state.node.link])}}>
+										<img src={getImgByPath(this.state.node.link)} alt="Link"></img>
+									</a>: null }
+								</div>
 							</div>
 						</td>
 						<td>{getChildrenUI(this.state, !this.state.isLeft)}</td>

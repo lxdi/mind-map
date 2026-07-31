@@ -50,11 +50,17 @@ export class NodeTree extends React.Component {
 							{leftNodes.map(node => <div key = {node.name + '-' + node.version}><ChildNode node = {node} isLeft = {true} refParent = {this.nodeRef} isLevel1 = {true} /> </div>)}
 						</td>
                         <td>
-							<div ref = {this.nodeRef} class={style} onClick={(e)=>{e.stopPropagation(); fireEvent('state', 'select', [this.state.root])}}>
-								<a href="#" style={{textDecoration:'none'}}  onClick={(e)=>{e.stopPropagation(); fireEvent('node-modal', 'open', [this.state.root])}}>
-									{this.state.root.name}
-								</a>
-								
+							<div style={{position: 'relative'}}>
+								<div style={{position: 'absolute', width:'100%', height: '100%', display: 'flex'}}>
+									<div style = {{width:'50%', height: '100%'}}></div>
+									<div style = {{width:'50%', height: '100%'}}></div>
+								</div>
+								<div ref = {this.nodeRef} class={style} onClick={(e)=>{e.stopPropagation(); fireEvent('state', 'select', [this.state.root])}}>
+									<a href="#" style={{textDecoration:'none'}}  onClick={(e)=>{e.stopPropagation(); fireEvent('node-modal', 'open', [this.state.root])}}>
+										{this.state.root.name}
+									</a>
+									
+								</div>
 							</div>
 						</td>
 						<td>

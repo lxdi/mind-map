@@ -81,10 +81,12 @@ public class CommandsService {
 
         if(System.getProperty("os.name").toLowerCase().contains("windows")){
             result.add("explorer.exe");
+            return result;
         }
 
         if(System.getProperty("os.name").toLowerCase().contains("mac")){
             result.add("open");
+            return result;
         }
 
         result.add("mimeopen");
