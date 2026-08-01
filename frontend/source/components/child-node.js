@@ -65,7 +65,9 @@ export class ChildNode extends React.Component {
 
 							<div style={{position: 'relative'}}>
 								<div style={{position: 'absolute', width:'100%', height: '100%', zIndex: '-1'}}>
-									<div style = {{width:'100%', height: '50%'}}></div>
+									<div style = {{width:'100%', height: '50%'}} 
+										onMouseEnter={() => console.log("enter")} 
+      									onMouseLeave={() => console.log("leave")}></div>
 									<div style = {{width:'100%', height: '50%'}}></div>
 								</div>
 								<div ref = {this.state.nodeRef} class={'node-common ' + styleCls} onClick={(e)=>{e.stopPropagation(); fireEvent('state', 'select', [this.state.node])}}

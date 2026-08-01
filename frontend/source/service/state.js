@@ -66,7 +66,7 @@ registerEvent('state', 'create-new', (stateSetter) => {
     newNode.version = parentNode.version
 
     indexContent(newNode, parentNode, false)
-    selectNode(stateSetter, newNode)
+    selectNode(newNode)
     stateSetter('changed', true)
 })
 
@@ -109,7 +109,7 @@ const selectNode = function(node) {
 
     var selectStorage = chkSt('state', 'selected')
 
-    if (chkSt('state', 'multiple-select') == false) {
+    if (!(chkSt('state', 'multiple-select') == true)) {
         selectStorage.length = 0
     }
 
