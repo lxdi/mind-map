@@ -54,6 +54,7 @@ const onDropHandler = function(stSetter, node, targetNode) {
 
     removeByValue(getChildren(node['_parent'], node), node)
     replace(chkSt('dragndrop', 'phantomHome'), chkSt('dragndrop', 'phantomNode'), node)
+    stSetter('phantomHome', null)
     fireEvent('state', 'change')
 }
 
